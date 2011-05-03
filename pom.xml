@@ -6,6 +6,9 @@
   <artifactId>triskel</artifactId>
   <version>0.1</version>
   <packaging>jar</packaging>
+  <description>
+  	WCF - Web component framework for java.
+  </description>
 
   <name>triskel</name>
   <url>http://maven.apache.org</url>
