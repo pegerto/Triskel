@@ -4,6 +4,8 @@ import gl.triskel.annotations.Parameter;
 import gl.triskel.components.WebPage;
 import gl.triskel.core.exceptions.PageNotFoundException;
 import gl.triskel.core.exceptions.UnableToLoadPageException;
+import gl.triskel.core.handler.TriskelHandler;
+import gl.triskel.core.handler.TriskelPageHandler;
 import gl.triskel.core.util.HtmlFormatter;
 
 import java.io.IOException;
@@ -29,9 +31,20 @@ public class Application implements Serializable {
 
 	private static HashMap<String, Class> pagesClass;
 	private static HashMap<String, WebPage> userPages;
+	private static TriskelHandler handler;
 	
+	
+	public static HashMap<String, Class> getPagesClass() {
+		return pagesClass;
+	}
+
+	public static HashMap<String, WebPage> getUserPages() {
+		return userPages;
+	}
+
 	public Application() {
 		userPages = new HashMap<String, WebPage>();
+		configureHandlers();
 	}
 	
 	@SuppressWarnings("static-access")
@@ -40,86 +53,21 @@ public class Application implements Serializable {
 		this.pagesClass = pagesClass;
 	}
 	
-	protected void servePage(HttpServletResponse response, HttpServletRequest request) 
-		throws IOException, UnableToLoadPageException, PageNotFoundException
+	
+	protected void process(HttpServletRequest request, HttpServletResponse response) throws UnableToLoadPageException, PageNotFoundException
 	{
-		String pagename = request.getRequestURI().substring(request.getContextPath().length() + 1);
-		pagename = pagename.toLowerCase();
-		
-		//Check if exists page in application
-		if (!pagesClass.containsKey(pagename))
-			throw new PageNotFoundException(pagename);
-		
-		PrintWriter print = response.getWriter();
-		Class page = pagesClass.get(pagename);
-	
-		WebPage spage = null;
-		
-		if (!userPages.containsKey(pagename))
+		if (this.handler != null)
 		{
-			try {
-				spage = (WebPage)page.newInstance();
-				userPages.put(pagename, spage);
-			} catch (InstantiationException e) {
-				throw new UnableToLoadPageException(e);
-			} catch (IllegalAccessException e) {
-				throw new UnableToLoadPageException(e);
-			}
-		}else{
-			spage = userPages.get(pagename);
+			handler.process(request, response);
 		}
-		
-		//configure parameters.
-		configureParameters(spage, request);
-		spage.onLoad();
-		
-		Document doc = new DocumentImpl();
-		doc.appendChild(spage.render(doc));
-		
-		print.write(HtmlFormatter.format(doc));
+	}
 	
+	
+	protected void configureHandlers()
+	{
+		handler = new TriskelPageHandler(null, this);
 	}
 	
 	
-	private void configureParameters(WebPage page, HttpServletRequest request)
-	{
-		//Parameters.
-		Enumeration params = request.getParameterNames();
-		
-		//Check all parameters
-		while(params.hasMoreElements())
-		{
-		       String name = (String)params.nextElement();
-		       
-		       try {
-		    	   Field classField = page.getClass().getDeclaredField(name);
-		    	   if (classField.getAnnotation(Parameter.class) != null)
-		    	   {
-		    		   //Set property accesible.
-		    		   classField.setAccessible(true);
-		    		   
-		    		   //Ajust target data type
-		    		   if (classField.getType().equals(String.class))
-		    		   {
-		    			   classField.set(page, request.getParameter(name));
-		    		   }else if(classField.getType().equals(Integer.class))
-		    		   {
-		    			   classField.set(page, Integer.valueOf(request.getParameter(name)));
-		    		   }else if(classField.getType().equals(Double.class))
-		    		   {
-		    			   classField.set(page, Double.valueOf(request.getParameter(name)));
-		    		   }
-		    		   //Is not logger accessible.
-		    		   classField.setAccessible(false);
-		    	   }
-		    	   
-		       
-				} catch (NoSuchFieldException e) {
-					//Logging to debug, but dosen�t mather.
-				} catch (IllegalAccessException e) {
-					//Logging to debug, but dosen�t mather.
-			}
-		}
-	}
 	
 }

@@ -96,7 +96,12 @@ public class TriskelServlet extends HttpServlet {
 				 }
 				 
 				try {
-					app.servePage(response,request);
+					
+					//Try
+					//app.servePage(response,request);
+					app.process(request, response);
+					
+					
 				} catch (UnableToLoadPageException e) {
 					//TODO GESTIONAR ERROR GRAVE APPLICACION.
 					e.printStackTrace();
