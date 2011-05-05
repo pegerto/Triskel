@@ -29,8 +29,6 @@ import javax.servlet.http.HttpSession;
 public class TriskelServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String APP = "APP";
-	static final int DEFAULT_BUFFER_SIZE = 32 * 1024;
-	
 	
 	private Class<? extends Application > applicationClass;
 	private HashMap<String, Class> pagePool;  
@@ -74,53 +72,40 @@ public class TriskelServlet extends HttpServlet {
     
     
     protected void service(HttpServletRequest request,
-  	            HttpServletResponse response) throws ServletException, IOException {
-    	
-    	 HttpSession session = request.getSession();
-    	 Application app = (Application) session.getAttribute(APP);
-    	 
-    	 switch (getRequestType(request)) {
-    	 	case APPLICATION_PAGE:
-				 if ( app == null)
-				 {
-					//Create a application instance to server the user.
-					try {
-						app = applicationClass.newInstance();
-					} catch (InstantiationException e) {
-						throw new ServletException("Error loading application");
-					} catch (IllegalAccessException e) {
-						throw new ServletException("Error loading application");
-					}
-					app.setPagesClass(pagePool);
-					session.setAttribute(APP, app);
-				 }
-				 
-				try {
-					
-					//Try
-					//app.servePage(response,request);
-					app.process(request, response);
-					
-					
-				} catch (UnableToLoadPageException e) {
-					//TODO GESTIONAR ERROR GRAVE APPLICACION.
-					e.printStackTrace();
-				} catch (PageNotFoundException e) {
-					// TODO GESTIONAR PAGINA ERROR.
-					e.printStackTrace();
-				}
-				 break;
-    	 	case WEB_RESOURCE:
-    	 		serveStaticResource(request, response);
-    	 		break;
-    	 		
-    	 	case FORM_POST:
-    	 		//load the data into the components.
-    	 		
-    	 		
-    	 		//execute page acction method.
-    	 		break;
-		}
+    		HttpServletResponse response) throws ServletException, IOException {
+
+    	HttpSession session = request.getSession();
+    	Application app = (Application) session.getAttribute(APP);
+
+    	if ( app == null)
+    	{
+    		//Create a application instance to server the user.
+    		try {
+    			app = applicationClass.newInstance();
+    		} catch (InstantiationException e) {
+    			throw new ServletException("Error loading application");
+    		} catch (IllegalAccessException e) {
+    			throw new ServletException("Error loading application");
+    		}
+    		app.setPagesClass(pagePool);
+    		session.setAttribute(APP, app);
+    	}
+
+    	try {
+
+
+    		app.setServletContext(getServletContext());
+    		app.process(request, response);
+
+
+    	} catch (UnableToLoadPageException e) {
+    		//TODO GESTIONAR ERROR GRAVE APPLICACION.
+    		e.printStackTrace();
+    	} catch (PageNotFoundException e) {
+    		// TODO GESTIONAR PAGINA ERROR.
+    		e.printStackTrace();
+    	}
+
     }
      
 	protected ClassLoader getClassLoader() throws ServletException {
@@ -228,89 +213,5 @@ public class TriskelServlet extends HttpServlet {
 		}	
 	}
 	
-	protected RequestType getRequestType(HttpServletRequest request)
-	{
-		String path = request.getRequestURL().toString().toLowerCase();
-		
-		if (request.getMethod().equals("GET"))
-		{
-			if(path.endsWith(ResourceConstants.HTM_FILE) 
-					||path.endsWith(ResourceConstants.HTML_FILE)
-					||path.endsWith(ResourceConstants.JPG_FILE)
-					||path.endsWith(ResourceConstants.GIF_FILE)
-					||path.endsWith(ResourceConstants.GIF_FILE)
-					||path.endsWith(ResourceConstants.CSS_FILE)) return RequestType.WEB_RESOURCE;
-		
-		
-			return RequestType.APPLICATION_PAGE;
-		}else if (request.getMethod().equals("POST"))
-		{
-			return RequestType.FORM_POST;
-		}else
-		{
-			//Miento :(
-			return RequestType.APPLICATION_PAGE;
-		}
-		
-	}
+}	
 	
-	protected void serveStaticResource(HttpServletRequest request, HttpServletResponse response) throws IOException
-	{
-		final ServletContext sc = getServletContext();
-		URL file = sc.getResource(request.getRequestURI().toString().substring(sc.getContextPath().length()));
-		
-		//Resource not found
-		if (file == null)
-		{
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-		}else{
-			long lastModifiedTime = file.openConnection().getLastModified();
-			lastModifiedTime = lastModifiedTime - lastModifiedTime % 1000;
-			if (browserHasNewestVersion(request, lastModifiedTime)) {
-				response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-				
-			}else{
-				final String mimetype = sc.getMimeType(file.toString());
-				
-				if (mimetype != null) {
-					response.setContentType(mimetype);
-				}
-				
-				if (lastModifiedTime > 0) {
-					response.setDateHeader("Last-Modified", lastModifiedTime);
-				}
-				
-				//Serve file
-				final OutputStream os = response.getOutputStream();
-				final byte buffer[] = new byte[DEFAULT_BUFFER_SIZE];
-				int bytes;
-				InputStream is = file.openStream();
-				while ((bytes = is.read(buffer)) >= 0) {
-					os.write(buffer, 0, bytes);
-				}
-				is.close();
-			}
-		}
-	}
-	
-	private boolean browserHasNewestVersion(HttpServletRequest request,
-			long resourceLastModifiedTimestamp) {
-
-		if (resourceLastModifiedTimestamp < 1) {
-			return false;
-		}
-
-		try {	  
-			long headerIfModifiedSince = request
-			.getDateHeader("If-Modified-Since");
-			if (headerIfModifiedSince >= resourceLastModifiedTimestamp) {
-				return true;
-			}
-		} catch (Exception e) {
-		}
-		return false;
-	}
-
-}
-
-

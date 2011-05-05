@@ -1,26 +1,19 @@
 package gl.triskel.core;
 
-import gl.triskel.annotations.Parameter;
 import gl.triskel.components.WebPage;
 import gl.triskel.core.exceptions.PageNotFoundException;
 import gl.triskel.core.exceptions.UnableToLoadPageException;
 import gl.triskel.core.handler.TriskelHandler;
 import gl.triskel.core.handler.TriskelPageHandler;
-import gl.triskel.core.util.HtmlFormatter;
+import gl.triskel.core.handler.TriskelStaticResourceHandler;
+import gl.triskel.core.util.ResourceConstants;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.Enumeration;
 import java.util.HashMap;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.w3c.dom.Document;
-
-import com.sun.org.apache.xerces.internal.dom.DocumentImpl;
 
 
 
@@ -32,6 +25,7 @@ public class Application implements Serializable {
 	private static HashMap<String, Class> pagesClass;
 	private static HashMap<String, WebPage> userPages;
 	private static TriskelHandler handler;
+	private static ServletContext context;
 	
 	
 	public static HashMap<String, Class> getPagesClass() {
@@ -65,9 +59,47 @@ public class Application implements Serializable {
 	
 	protected void configureHandlers()
 	{
-		handler = new TriskelPageHandler(null, this);
+		handler = new TriskelStaticResourceHandler(
+				new TriskelPageHandler(null, this), this);
+		
+		
 	}
 	
+	
+	public RequestType getRequestType(HttpServletRequest request)
+	{
+		String path = request.getRequestURL().toString().toLowerCase();
+		
+		if (request.getMethod().equals("GET"))
+		{
+			if(path.endsWith(ResourceConstants.HTM_FILE) 
+					||path.endsWith(ResourceConstants.HTML_FILE)
+					||path.endsWith(ResourceConstants.JPG_FILE)
+					||path.endsWith(ResourceConstants.GIF_FILE)
+					||path.endsWith(ResourceConstants.PNG_FILE)
+					||path.endsWith(ResourceConstants.CSS_FILE)) return RequestType.WEB_RESOURCE;
+		
+		
+			return RequestType.APPLICATION_PAGE;
+		}else if (request.getMethod().equals("POST"))
+		{
+			return RequestType.FORM_POST;
+		}else
+		{
+			return RequestType.APPLICATION_PAGE;
+		}
+		
+	}
+	
+	public ServletContext getServletContext()
+	{
+		return context;
+	}
+	
+	public void setServletContext(ServletContext context)
+	{
+		this.context = context;
+	}
 	
 	
 }
