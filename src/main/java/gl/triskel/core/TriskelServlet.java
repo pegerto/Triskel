@@ -24,7 +24,32 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class TrisquelServlet
+ * 
+ * Triskel Web Framework 
+ * A Coruña 2011
+ *   
+ *  
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * @author pegerto
+ * 
+ * @version
+ * Servlet integration for Triskel web framework, used to run Triskel like a 
+ * servlet.
+ *
  */
 public class TriskelServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -32,6 +57,16 @@ public class TriskelServlet extends HttpServlet {
 	
 	private Class<? extends Application > applicationClass;
 	private HashMap<String, Class> pagePool;  
+	
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public TriskelServlet() {
+        super();
+        
+        pagePool = new HashMap<String, Class>();
+    }
+
 	
 	@SuppressWarnings("unchecked")
 	public void init(ServletConfig servletConfig) 
@@ -58,17 +93,6 @@ public class TriskelServlet extends HttpServlet {
 		populatePagePool(servletConfig);
 		
 	}
-	
-	
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public TriskelServlet() {
-        super();
-        
-        pagePool = new HashMap<String, Class>();
-    }
-
     
     
     protected void service(HttpServletRequest request,
@@ -94,8 +118,8 @@ public class TriskelServlet extends HttpServlet {
     	try {
 
 
-    		app.setServletContext(getServletContext());
-    		app.process(request, response);
+    		app.setTriskelContext(new TriskelContext(getServletContext()));
+    		app.process(new TriskelRequest(request), new TriskelResponse(response));
 
 
     	} catch (UnableToLoadPageException e) {
