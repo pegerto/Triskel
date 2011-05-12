@@ -1,5 +1,7 @@
 package gl.triskel.components;
 
+import gl.triskel.components.interfaces.WebPageVisitor;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -46,6 +48,14 @@ public class Image extends Component {
 			imgElement.setAttribute("src", resourcePath);
 		
 		return imgElement;
+	}
+
+	/* (non-Javadoc)
+	 * @see gl.triskel.components.Component#accept(gl.triskel.components.interfaces.WebPageVisitor)
+	 */
+	@Override
+	public void accept(WebPageVisitor visitor) {
+		visitor.visit(this);
 	}
 
 }

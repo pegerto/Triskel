@@ -6,6 +6,7 @@ import org.w3c.dom.Element;
 import gl.triskel.components.Component;
 import gl.triskel.components.Layout;
 import gl.triskel.components.WebPage;
+import gl.triskel.components.interfaces.WebPageVisitor;
 
 /**
  * 
@@ -66,6 +67,15 @@ public class Form extends Layout{
 			WebPage page = (WebPage) parent;
 			return  page.getUrl();
 		}else	return "#";
+	}
+
+
+	/* (non-Javadoc)
+	 * @see gl.triskel.components.Component#accept(gl.triskel.components.interfaces.WebPageVisitor)
+	 */
+	@Override
+	public void accept(WebPageVisitor visitor) {
+		visitor.visit(this);		
 	}
 	
 	

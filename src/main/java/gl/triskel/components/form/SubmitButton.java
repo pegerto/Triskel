@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import gl.triskel.components.Component;
+import gl.triskel.components.interfaces.WebPageVisitor;
 
 /**
  * 
@@ -37,6 +38,14 @@ public class SubmitButton extends Component{
 		inputElement.setAttribute("type", "submit");
 	
 		return inputElement;
+	}
+
+	/* (non-Javadoc)
+	 * @see gl.triskel.components.Component#accept(gl.triskel.components.interfaces.WebPageVisitor)
+	 */
+	@Override
+	public void accept(WebPageVisitor visitor) {
+		visitor.visit(this);
 	}
 
 	

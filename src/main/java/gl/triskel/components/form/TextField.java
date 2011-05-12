@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import gl.triskel.components.Component;
+import gl.triskel.components.interfaces.WebPageVisitor;
 
 /**
  * 
@@ -31,14 +32,74 @@ import gl.triskel.components.Component;
  */
 public class TextField extends Component{
 
+	public enum TextFieldType
+	{
+		TEXT,INTEGER
+	}
+	
+	private String text;
+	private TextFieldType type;
+	
+	
+	public TextField()
+	{
+		text = "";
+		type = TextFieldType.TEXT;
+	}
+	
+	/**
+	 * Text value of the TextField
+	 * @return value of the text field.
+	 */
+	public String getText() {
+		return text;
+	}
+
+	/**
+	 * Set the value of the text field.
+	 * @param text
+	 */
+	public void setText(String text) {
+		this.text = text;
+	}
+	
+	public TextFieldType getType() {
+		return type;
+	}
+
+	public void setType(TextFieldType type) {
+		this.type = type;
+	}
+
 	@Override
 	public Element render(Document doc) {
 		Element inputElement= doc.createElement("input");
 		inputElement.setAttribute("type", "text");
 		if (this.getId() != null)
 			inputElement.setAttribute("name", this.getId());
+		inputElement.setAttribute("value", text);
+		
+		//Validate content
+		switch (type) {
+		case INTEGER:
+			inputElement.setAttribute("onKeyPress", "return checkTextFieldType(evt)");
+			break;
+
+		default:
+			break;
+		}
+		
 		return inputElement;
 	}
+
+	/* (non-Javadoc)
+	 * @see gl.triskel.components.Component#accept(gl.triskel.components.interfaces.WebPageVisitor)
+	 */
+	@Override
+	public void accept(WebPageVisitor visitor) {
+		visitor.visit(this);
+	}
+
 	
 
 }

@@ -4,6 +4,7 @@ import gl.triskel.components.WebPage;
 import gl.triskel.core.exceptions.PageNotFoundException;
 import gl.triskel.core.exceptions.UnableToLoadPageException;
 import gl.triskel.core.handler.TriskelHandler;
+import gl.triskel.core.handler.TriskelLibraryHandler;
 import gl.triskel.core.handler.TriskelPageHandler;
 import gl.triskel.core.handler.TriskelStaticResourceHandler;
 import gl.triskel.core.util.ResourceConstants;
@@ -82,8 +83,9 @@ public class Application implements Serializable {
 	
 	protected void configureHandlers()
 	{
-		handler = new TriskelStaticResourceHandler(
-				new TriskelPageHandler(null, this), this);
+		handler = new TriskelLibraryHandler(
+				new TriskelStaticResourceHandler(
+				new TriskelPageHandler(null, this), this), this);
 		
 		
 	}

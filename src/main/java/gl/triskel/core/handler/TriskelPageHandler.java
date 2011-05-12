@@ -18,6 +18,7 @@ import gl.triskel.core.TriskelResponse;
 import gl.triskel.core.exceptions.PageNotFoundException;
 import gl.triskel.core.exceptions.UnableToLoadPageException;
 import gl.triskel.core.util.HtmlFormatter;
+import gl.triskel.core.visitor.ParameterVisitor;
 
 /**
  * 
@@ -49,7 +50,6 @@ public class TriskelPageHandler extends TriskelHandler{
 		super(next, app);
 	}
 
-	
 	public void process(TriskelRequest request, TriskelResponse response) throws PageNotFoundException,
 		UnableToLoadPageException {
 		
@@ -92,6 +92,10 @@ public class TriskelPageHandler extends TriskelHandler{
 		}
 		//configure parameters.
 		configureParameters(spage, request);
+		
+		//rewrite parameters into the components using visitor
+		spage.accept(new ParameterVisitor(request));
+		
 		spage.onLoad();
 		
 		Document doc = new DocumentImpl();

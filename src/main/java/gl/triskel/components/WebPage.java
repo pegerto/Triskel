@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 
 import gl.triskel.annotations.CssStyle;
 import gl.triskel.annotations.Page;
+import gl.triskel.components.interfaces.WebPageVisitor;
 
 /**
  * 
@@ -62,10 +63,18 @@ public class WebPage extends Layout {
 		Element headElement = doc.createElement("head");
 		htmlElement.appendChild(headElement);
 		
+		
 		//Title
 		Element titleElement = doc.createElement("title");
 		titleElement.setTextContent(pageTitle);
 		headElement.appendChild(titleElement);
+		
+		//Basic js library
+		Element basicLib = doc.createElement("script");
+		basicLib.setAttribute("type", "text/javascript");
+		basicLib.setAttribute("src", "TRISKELJSLIBRARY/tiskel.js");
+		basicLib.setTextContent(";"); //We need to divide nodes, <script> dosen't support <script/>
+		headElement.appendChild(basicLib);
 		
 		//Styles
 		CssStyle cssStyle = (CssStyle)(this.getClass().getAnnotation(CssStyle.class));
@@ -102,5 +111,13 @@ public class WebPage extends Layout {
 	
 	public void onLoad()
 	{}
+
+	/* (non-Javadoc)
+	 * @see gl.triskel.components.Component#accept(gl.triskel.components.interfaces.WebPageVisitor)
+	 */
+	@Override
+	public void accept(WebPageVisitor visitor) {
+		visitor.visit(this);
+	}
 	
 }

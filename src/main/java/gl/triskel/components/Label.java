@@ -1,5 +1,7 @@
 package gl.triskel.components;
 
+import gl.triskel.components.interfaces.WebPageVisitor;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -66,6 +68,15 @@ public class Label extends Component{
 		
 		
 		return spanElement;
+	}
+
+	/* (non-Javadoc)
+	 * @see gl.triskel.components.Component#accept(gl.triskel.components.interfaces.WebPageVisitor)
+	 */
+	@Override
+	public void accept(WebPageVisitor visitor) {
+		visitor.visit(this);
+		
 	}
 
 	

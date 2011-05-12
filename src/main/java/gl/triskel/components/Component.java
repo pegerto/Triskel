@@ -1,6 +1,7 @@
 package gl.triskel.components;
 
 import gl.triskel.components.interfaces.Renderizable;
+import gl.triskel.components.interfaces.WebPageVisitor;
 
 /**
  * 
@@ -55,6 +56,10 @@ public abstract class Component implements Renderizable{
 		return parent;
 	}
 	
-	
+	/**
+	 * Method for accept visitor pattern into the webpage structure.
+	 * @param visitor 
+	 */
+	public abstract void accept(WebPageVisitor visitor);
 	
 }

@@ -16,6 +16,17 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+	
+  <build>  
+    <!-- tell Maven to package you JS files as resources -->  
+    <resources>  
+      <resource>  
+        <directory>src/main/java/gl/triskel/core/js/</directory>  
+        <!-- true or false depending on your taste :-) -->  
+        <filtering>true</filtering>  
+      </resource>  
+    </resources>  
+  </build>  
 
   <dependencies>
   	<dependency>
@@ -30,6 +41,37 @@
     	<version>3.8.1</version>
      	<scope>test</scope>
     </dependency>
+    
+    <!--  Used for generate UML diagrams in javadoc -->
+    <dependency>
+  		<groupId>gr.spinellis</groupId>
+  		<artifactId>UmlGraph</artifactId>
+  		<version>4.6</version>
+	</dependency>
+    
   </dependencies>
+  
+   <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.8</version>
+        <configuration>
+          <doclet>org.umlgraph.doclet.UmlGraphDoc</doclet>
+
+          <!-- <docletPath>/path/to/UmlGraph.jar</docletPath> -->
+          <docletArtifact>
+            <groupId>org.umlgraph</groupId>
+            <artifactId>doclet</artifactId>
+            <version>5.1</version>
+          </docletArtifact>
+          <additionalparam>-views</additionalparam>
+          <useStandardDocletOptions>true</useStandardDocletOptions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+  
 </project>
 

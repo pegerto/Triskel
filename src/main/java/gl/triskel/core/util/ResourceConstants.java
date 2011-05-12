@@ -31,4 +31,5 @@ public class ResourceConstants {
 	public static final String GIF_FILE = ".gif";
 	public static final String PNG_FILE = ".png";
 	public static final String CSS_FILE = ".css";
+	public static final String JS_FILE	= ".js";
 }
