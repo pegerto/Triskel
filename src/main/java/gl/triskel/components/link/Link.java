@@ -8,6 +8,8 @@ import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import sun.applet.GetWindowPluginCallRequest;
+
 import gl.triskel.annotations.Page;
 import gl.triskel.components.Component;
 import gl.triskel.components.WebPage;
@@ -84,7 +86,7 @@ public class Link extends Component{
 
 		if (page != null)
 		{
-			String href = ((Page)page.getAnnotation(Page.class)).relativePath();
+			String href = resolveConextPath() + "/"  + ((Page)page.getAnnotation(Page.class)).relativePath();
 			if (!parameters.isEmpty())
 			{
 				href += "?";
@@ -107,6 +109,23 @@ public class Link extends Component{
 	}
 
 
+	/**
+	 * Return the application context path.
+	 * @return
+	 */
+	private String resolveConextPath()
+	{
+		Component parent = this.getParent();
+		while (parent != null && !WebPage.class.isAssignableFrom(parent.getClass())) {
+			parent =  parent.getParent();
+		}
+		if (parent instanceof WebPage) {
+			WebPage page = (WebPage) parent;
+			return  page.getApplication().getTriskelContext().getContextPath();
+		}else	return "";
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see gl.triskel.components.Component#accept(gl.triskel.components.interfaces.WebPageVisitor)
 	 */

@@ -6,6 +6,7 @@ import org.w3c.dom.Element;
 import gl.triskel.annotations.CssStyle;
 import gl.triskel.annotations.Page;
 import gl.triskel.components.interfaces.WebPageVisitor;
+import gl.triskel.core.Application;
 
 /**
  * 
@@ -34,6 +35,9 @@ import gl.triskel.components.interfaces.WebPageVisitor;
 public class WebPage extends Layout {
 	
 	private String url;
+	private Application application;
+	
+	
 	
 	public void setUrl(String url)
 	{
@@ -43,6 +47,19 @@ public class WebPage extends Layout {
 	public String getUrl()
 	{
 		return url;
+	}
+	/**
+	 * @param application the application to set
+	 */
+	public void setApplication(Application application) {
+		this.application = application;
+	}
+
+	/**
+	 * @return the application
+	 */
+	public Application getApplication() {
+		return application;
 	}
 	
 
@@ -119,5 +136,7 @@ public class WebPage extends Layout {
 	public void accept(WebPageVisitor visitor) {
 		visitor.visit(this);
 	}
+
+
 	
 }

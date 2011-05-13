@@ -80,6 +80,7 @@ public class TriskelPageHandler extends TriskelHandler{
 				
 				//set prereaded url
 				spage.setUrl(app.getTriskelContext().getContextPath() + "/" + pagename);
+				spage.setApplication(app);
 				
 				app.getUserPages().put(pagename, spage);
 			} catch (InstantiationException e) {
@@ -90,13 +91,21 @@ public class TriskelPageHandler extends TriskelHandler{
 		}else{
 			spage = app.getUserPages().get(pagename);
 		}
-		//configure parameters.
+		//our request manage the current page.
+		request.setPage(spage);
+		
+		//configure get parameters.
 		configureParameters(spage, request);
+	
+		if (request.getMethod() == "POST")
+		{
+			//Delegate into the post filter.
+			if(next != null) next.process(request, response);
+		}else
+		{
+			spage.onLoad();
+		}
 		
-		//rewrite parameters into the components using visitor
-		spage.accept(new ParameterVisitor(request));
-		
-		spage.onLoad();
 		
 		Document doc = new DocumentImpl();
 		doc.appendChild(spage.render(doc));

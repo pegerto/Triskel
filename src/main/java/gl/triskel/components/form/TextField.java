@@ -39,6 +39,7 @@ public class TextField extends Component{
 	
 	private String text;
 	private TextFieldType type;
+	private String caption;
 	
 	
 	public TextField()
@@ -70,9 +71,33 @@ public class TextField extends Component{
 	public void setType(TextFieldType type) {
 		this.type = type;
 	}
+	
+	public String getCaption() {
+		return caption;
+	}
+
+	public void setCaption(String caption) {
+		this.caption = caption;
+	}
 
 	@Override
 	public Element render(Document doc) {
+		
+		
+		//Element div to contain html components included in this triskel component
+		Element textFieldDiv = doc.createElement("div");
+		
+		//Label for textbox
+		//if caption for label is set
+		if (caption != null)
+		{
+			Element label = doc.createElement("label");
+			label.setAttribute("for", this.getId());
+			label.setTextContent(caption);
+			textFieldDiv.appendChild(label);
+		}
+		
+		//Textbox
 		Element inputElement= doc.createElement("input");
 		inputElement.setAttribute("type", "text");
 		if (this.getId() != null)
@@ -89,7 +114,9 @@ public class TextField extends Component{
 			break;
 		}
 		
-		return inputElement;
+		textFieldDiv.appendChild(inputElement);
+		
+		return textFieldDiv;
 	}
 
 	/* (non-Javadoc)

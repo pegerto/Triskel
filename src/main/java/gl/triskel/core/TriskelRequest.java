@@ -1,5 +1,7 @@
 package gl.triskel.core;
 
+import gl.triskel.components.WebPage;
+
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +35,7 @@ public class TriskelRequest {
 	
 	private HttpServletRequest servletRequest;
 	private RequestProvider provider;
+	private WebPage page;
 	
 	private  enum RequestProvider {
 		SERVLET
@@ -44,6 +47,18 @@ public class TriskelRequest {
 	}
 	
 	
+	public WebPage getPage() {
+		return page;
+	}
+
+	public void setPage(WebPage page) {
+		this.page = page;
+	}
+
+
+
+
+
 	public String getContextPath()
 	{
 		switch (provider) {

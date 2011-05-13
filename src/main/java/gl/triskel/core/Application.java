@@ -6,16 +6,12 @@ import gl.triskel.core.exceptions.UnableToLoadPageException;
 import gl.triskel.core.handler.TriskelHandler;
 import gl.triskel.core.handler.TriskelLibraryHandler;
 import gl.triskel.core.handler.TriskelPageHandler;
+import gl.triskel.core.handler.TriskelPostHandler;
 import gl.triskel.core.handler.TriskelStaticResourceHandler;
 import gl.triskel.core.util.ResourceConstants;
 
 import java.io.Serializable;
 import java.util.HashMap;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 
 /**
  * 
@@ -74,7 +70,7 @@ public class Application implements Serializable {
 	
 	protected void process(TriskelRequest request, TriskelResponse response) throws UnableToLoadPageException, PageNotFoundException
 	{
-		if (this.handler != null)
+		if (handler != null)
 		{
 			handler.process(request, response);
 		}
@@ -84,10 +80,10 @@ public class Application implements Serializable {
 	protected void configureHandlers()
 	{
 		handler = new TriskelLibraryHandler(
-				new TriskelStaticResourceHandler(
-				new TriskelPageHandler(null, this), this), this);
-		
-		
+				  new TriskelStaticResourceHandler(
+				  new TriskelPageHandler(
+				  new TriskelPostHandler(
+				  null, this), this), this), this);
 	}
 	
 	
