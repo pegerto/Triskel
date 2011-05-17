@@ -7,6 +7,7 @@ import gl.triskel.annotations.CssStyle;
 import gl.triskel.annotations.Page;
 import gl.triskel.components.interfaces.WebPageVisitor;
 import gl.triskel.core.Application;
+import gl.triskel.core.util.PageConfiguration;
 
 /**
  * 
@@ -37,6 +38,10 @@ public class WebPage extends Layout {
 	private String url;
 	private Application application;
 	
+	public WebPage()
+	{
+		PageConfiguration.configure(this);
+	}
 	
 	
 	public void setUrl(String url)
@@ -85,13 +90,21 @@ public class WebPage extends Layout {
 		Element titleElement = doc.createElement("title");
 		titleElement.setTextContent(pageTitle);
 		headElement.appendChild(titleElement);
+	
+		//jquery
+		Element jqueryLib = doc.createElement("script");
+		jqueryLib.setAttribute("type", "text/javascript");
+		jqueryLib.setAttribute("src", "TRISKELJSLIBRARY/jquery.js");
+		jqueryLib.setTextContent(";"); //We need to divide nodes, <script> dosen't support <script/>
+		headElement.appendChild(jqueryLib);
+	
 		
 		//Basic js library
 		Element basicLib = doc.createElement("script");
 		basicLib.setAttribute("type", "text/javascript");
 		basicLib.setAttribute("src", "TRISKELJSLIBRARY/tiskel.js");
 		basicLib.setTextContent(";"); //We need to divide nodes, <script> dosen't support <script/>
-		headElement.appendChild(basicLib);
+		headElement.appendChild(basicLib);	
 		
 		//Styles
 		CssStyle cssStyle = (CssStyle)(this.getClass().getAnnotation(CssStyle.class));

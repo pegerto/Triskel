@@ -2,6 +2,7 @@ package gl.triskel.core.handler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Enumeration;
 
@@ -18,6 +19,7 @@ import gl.triskel.core.TriskelResponse;
 import gl.triskel.core.exceptions.PageNotFoundException;
 import gl.triskel.core.exceptions.UnableToLoadPageException;
 import gl.triskel.core.util.HtmlFormatter;
+import gl.triskel.core.util.PageConfiguration;
 import gl.triskel.core.visitor.ParameterVisitor;
 
 /**
@@ -113,9 +115,6 @@ public class TriskelPageHandler extends TriskelHandler{
 		print.write(HtmlFormatter.format(doc));		
 	}
 
-	
-
-	
 	private void configureParameters(WebPage page, TriskelRequest request)
 	{
 		//Parameters.

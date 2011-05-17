@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import gl.triskel.components.Component;
+import gl.triskel.components.form.validator.ValidatorType;
 import gl.triskel.components.interfaces.WebPageVisitor;
 
 /**
@@ -40,12 +41,15 @@ public class TextField extends Component{
 	private String text;
 	private TextFieldType type;
 	private String caption;
+	private boolean password;
+	private ValidatorType validator;
 	
 	
 	public TextField()
 	{
 		text = "";
 		type = TextFieldType.TEXT;
+		validator = ValidatorType.NONE;
 	}
 	
 	/**
@@ -79,6 +83,21 @@ public class TextField extends Component{
 	public void setCaption(String caption) {
 		this.caption = caption;
 	}
+	public boolean isPassword() {
+		return password;
+	}
+
+	public void setPassword(boolean password) {
+		this.password = password;
+	}
+	
+	public ValidatorType getValidator() {
+		return validator;
+	}
+
+	public void setValidator(ValidatorType validator) {
+		this.validator = validator;
+	}
 
 	@Override
 	public Element render(Document doc) {
@@ -97,9 +116,23 @@ public class TextField extends Component{
 			textFieldDiv.appendChild(label);
 		}
 		
-		//Textbox
 		Element inputElement= doc.createElement("input");
-		inputElement.setAttribute("type", "text");
+		
+		if (password)
+		{
+			inputElement.setAttribute("type", "passwod");
+		}else{
+			inputElement.setAttribute("type", "text");
+		}
+		
+		switch(validator)
+		{
+			case REQUIRED:
+				inputElement.setAttribute("validation", "required");
+				break;
+		}
+		
+		
 		if (this.getId() != null)
 			inputElement.setAttribute("name", this.getId());
 		inputElement.setAttribute("value", text);

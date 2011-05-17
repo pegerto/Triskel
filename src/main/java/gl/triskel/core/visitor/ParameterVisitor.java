@@ -7,7 +7,9 @@ import gl.triskel.components.Component;
 import gl.triskel.components.Image;
 import gl.triskel.components.Label;
 import gl.triskel.components.WebPage;
+import gl.triskel.components.form.CheckBox;
 import gl.triskel.components.form.Form;
+import gl.triskel.components.form.RadioButton;
 import gl.triskel.components.form.SubmitButton;
 import gl.triskel.components.form.TextField;
 import gl.triskel.components.interfaces.WebPageVisitor;
@@ -108,6 +110,26 @@ public class ParameterVisitor implements WebPageVisitor{
 	 */
 	@Override
 	public void visit(Link link) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	/* (non-Javadoc)
+	 * @see gl.triskel.components.interfaces.WebPageVisitor#visit(gl.triskel.components.form.RadioButton)
+	 */
+	@Override
+	public void visit(RadioButton radioButton) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	/* (non-Javadoc)
+	 * @see gl.triskel.components.interfaces.WebPageVisitor#visit(gl.triskel.components.form.CheckBox)
+	 */
+	@Override
+	public void visit(CheckBox checkbox) {
 		// TODO Auto-generated method stub
 		
 	}

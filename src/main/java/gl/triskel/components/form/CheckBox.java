@@ -1,17 +1,13 @@
 /**
  * 
  */
-package gl.triskel.components.interfaces;
+package gl.triskel.components.form;
 
-import gl.triskel.components.Image;
-import gl.triskel.components.Label;
-import gl.triskel.components.WebPage;
-import gl.triskel.components.form.CheckBox;
-import gl.triskel.components.form.Form;
-import gl.triskel.components.form.RadioButton;
-import gl.triskel.components.form.SubmitButton;
-import gl.triskel.components.form.TextField;
-import gl.triskel.components.link.Link;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import gl.triskel.components.Component;
+import gl.triskel.components.interfaces.WebPageVisitor;
 
 /**
  * Triskel Web Framework 
@@ -34,20 +30,31 @@ import gl.triskel.components.link.Link;
  * limitations under the License.
  * 
  * @author pegerto
- * 
- * Interface for visitor pattern.
  *
  */
-public interface WebPageVisitor {
-	
-	public void visit(WebPage webpage);
-	public void visit(Form form);
-	public void visit(TextField textfield);
-	public void visit(Label label);
-	public void visit(Image image);
-	public void visit(SubmitButton submitButton);
-	public void visit(Link link);
-	public void visit(RadioButton radioButton);
-	public void visit(CheckBox checkbox); 
+public class CheckBox extends Component{
 
+	/* (non-Javadoc)
+	 * @see gl.triskel.components.interfaces.Renderizable#render(org.w3c.dom.Document)
+	 */
+	@Override
+	public Element render(Document doc) {
+		
+		Element inputElement= doc.createElement("input");
+		inputElement.setAttribute("type", "checkbox");
+		inputElement.setAttribute("name", this.getId());
+		
+		return inputElement;
+	}
+
+	/* (non-Javadoc)
+	 * @see gl.triskel.components.Component#accept(gl.triskel.components.interfaces.WebPageVisitor)
+	 */
+	@Override
+	public void accept(WebPageVisitor visitor) {
+		visitor.visit(this);
+	}
+
+	
+	
 }

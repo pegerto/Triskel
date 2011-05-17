@@ -1,17 +1,14 @@
 /**
  * 
  */
-package gl.triskel.components.interfaces;
+package gl.triskel.annotations;
 
-import gl.triskel.components.Image;
-import gl.triskel.components.Label;
-import gl.triskel.components.WebPage;
-import gl.triskel.components.form.CheckBox;
-import gl.triskel.components.form.Form;
-import gl.triskel.components.form.RadioButton;
-import gl.triskel.components.form.SubmitButton;
-import gl.triskel.components.form.TextField;
-import gl.triskel.components.link.Link;
+import gl.triskel.components.form.TextField.TextFieldType;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Triskel Web Framework 
@@ -34,20 +31,14 @@ import gl.triskel.components.link.Link;
  * limitations under the License.
  * 
  * @author pegerto
- * 
- * Interface for visitor pattern.
  *
  */
-public interface WebPageVisitor {
-	
-	public void visit(WebPage webpage);
-	public void visit(Form form);
-	public void visit(TextField textfield);
-	public void visit(Label label);
-	public void visit(Image image);
-	public void visit(SubmitButton submitButton);
-	public void visit(Link link);
-	public void visit(RadioButton radioButton);
-	public void visit(CheckBox checkbox); 
 
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface TextFieldConfig {
+	String id();
+	TextFieldType type();
+	String caption() default "";
+	boolean password() default false;
 }

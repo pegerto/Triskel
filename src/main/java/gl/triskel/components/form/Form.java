@@ -41,6 +41,7 @@ public class Form extends Layout{
 		//Only POST method is allowed.
 		formElement.setAttribute("method", "POST");
 		formElement.setAttribute("action", this.resolveActionURL());
+		if (this.getId() != null) formElement.setAttribute("id", this.getId());
 	
 		if (this.hasChildrens())
 		{
@@ -49,6 +50,17 @@ public class Form extends Layout{
 				formElement.appendChild(component.render(doc));
 			}
 		}
+		
+		Element validationScript = doc.createElement("script");
+		StringBuffer script = new StringBuffer(20);
+		
+		script.append("var form = $(\"#"+this.getId()+"\");");
+		script.append("form.validation();");
+		
+		validationScript.setTextContent(script.toString());
+		
+		formElement.appendChild(validationScript);
+		
 		return formElement;
 	}
 	
