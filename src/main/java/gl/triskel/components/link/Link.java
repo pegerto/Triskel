@@ -8,8 +8,6 @@ import java.util.Set;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import sun.applet.GetWindowPluginCallRequest;
-
 import gl.triskel.annotations.Page;
 import gl.triskel.components.Component;
 import gl.triskel.components.WebPage;
@@ -87,7 +85,7 @@ public class Link extends Component{
 		if (page != null)
 		{
 			String href = resolveConextPath() + "/"  + ((Page)page.getAnnotation(Page.class)).relativePath();
-			if (!parameters.isEmpty())
+			if (parameters != null && !parameters.isEmpty())
 			{
 				href += "?";
 				Iterator<LinkParameter> iter = parameters.iterator();
