@@ -1,15 +1,7 @@
 /**
  * 
  */
-package gl.triskel.annotations;
-
-import gl.triskel.components.form.TextField.TextFieldType;
-import gl.triskel.components.form.validator.ValidatorType;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package gl.triskel.core.util;
 
 /**
  * Triskel Web Framework 
@@ -34,13 +26,27 @@ import java.lang.annotation.Target;
  * @author pegerto
  *
  */
+public class Pair<L,R> {
+	
+	  private L left; 
+	  private R right; 
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface TextFieldConfig {
-	String id();
-	TextFieldType type();
-	String caption() default "";
-	ValidatorType validator() default ValidatorType.NONE;
-	boolean password() default false;
-}
+	public Pair(L left, R right) {
+		super();
+		this.left = left;
+		this.right = right;
+	}
+	public L getLeft() { return left; } 
+	  public R getRight() { return right; } 
+	  
+	  public int hashCode() { return left.hashCode() ^ right.hashCode(); } 
+	
+	  public boolean equals(Object o) { 
+	    if (o == null) return false; 
+	    if (!(o instanceof Pair)) return false; 
+	    Pair pairo = (Pair) o; 
+	    return this.left.equals(pairo.getLeft()) && 
+	           this.right.equals(pairo.getRight()); 
+	  } 
+	} 
+

@@ -13,6 +13,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import gl.triskel.components.Component;
+import gl.triskel.components.Label;
 import gl.triskel.components.interfaces.WebPageVisitor;
 import gl.triskel.core.util.Pair;
 
@@ -68,6 +69,13 @@ public class Grid extends Component{
 	}
 	public void setCols(int cols) {
 		this.cols = cols;
+	}
+	
+	public void set(int row, int col, String text)
+	{
+		Label lab = new Label();
+		lab.setText(text);
+		set(row,col,lab);
 	}
 	
 	public void set(int row, int col, Component component)
